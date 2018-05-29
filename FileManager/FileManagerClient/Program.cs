@@ -16,7 +16,7 @@ namespace FileManagerClient
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new FMClient());
+            Application.Run(new FMConnect());
         }
     }
 }

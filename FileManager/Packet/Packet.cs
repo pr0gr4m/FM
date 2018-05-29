@@ -12,12 +12,16 @@ namespace PacketLibrary
     public enum PacketType
     {
         ACK = 0,
-        FileMeta
+        Case,
+        CaseSelected,
+        FileMeta,
+        EOP     // End of Packet
     }
 
     public static class PUtility
     {
         public const int BUF_LEN = 4096;
+        public const int PORT_NUM = 18888;
         public static string CalculateMD5(string filename)
         {
             using (var md5 = System.Security.Cryptography.MD5.Create())
@@ -28,6 +32,16 @@ namespace PacketLibrary
                     return BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant();
                 }
             }
+        }
+        public static string GetLocalIP()
+        {
+            var host = Dns.GetHostEntry(Dns.GetHostName());
+            foreach (var ip in host.AddressList)
+            {
+                if (ip.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
+                    return ip.ToString();
+            }
+            throw new Exception("There is no NIC for IPv4");
         }
     }
 

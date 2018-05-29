@@ -28,125 +28,175 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.txtIP = new System.Windows.Forms.TextBox();
-            this.txtPort = new System.Windows.Forms.TextBox();
-            this.btnConnect = new System.Windows.Forms.Button();
             this.openFileDlg = new System.Windows.Forms.OpenFileDialog();
-            this.btnOpen = new System.Windows.Forms.Button();
-            this.labelHash = new System.Windows.Forms.Label();
+            this.btnUpload = new System.Windows.Forms.Button();
+            this.viewClient = new System.Windows.Forms.TreeView();
+            this.listClient = new System.Windows.Forms.ListView();
+            this.cliFileName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.cliFileSize = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.cliFileDate = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.viewServer = new System.Windows.Forms.TreeView();
+            this.listServer = new System.Windows.Forms.ListView();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.servFileName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.servFileSize = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.servFileDate = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.groupBox1.SuspendLayout();
+            this.groupBox2.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // groupBox1
-            // 
-            this.groupBox1.Controls.Add(this.btnConnect);
-            this.groupBox1.Controls.Add(this.txtPort);
-            this.groupBox1.Controls.Add(this.txtIP);
-            this.groupBox1.Controls.Add(this.label2);
-            this.groupBox1.Controls.Add(this.label1);
-            this.groupBox1.Location = new System.Drawing.Point(12, 12);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(702, 72);
-            this.groupBox1.TabIndex = 0;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "groupBox1";
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(21, 32);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(30, 15);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "IP :";
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(374, 32);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(44, 15);
-            this.label2.TabIndex = 1;
-            this.label2.Text = "Port :";
-            // 
-            // txtIP
-            // 
-            this.txtIP.Location = new System.Drawing.Point(59, 27);
-            this.txtIP.Name = "txtIP";
-            this.txtIP.Size = new System.Drawing.Size(294, 25);
-            this.txtIP.TabIndex = 2;
-            // 
-            // txtPort
-            // 
-            this.txtPort.Location = new System.Drawing.Point(424, 27);
-            this.txtPort.Name = "txtPort";
-            this.txtPort.Size = new System.Drawing.Size(135, 25);
-            this.txtPort.TabIndex = 3;
-            // 
-            // btnConnect
-            // 
-            this.btnConnect.Location = new System.Drawing.Point(579, 28);
-            this.btnConnect.Name = "btnConnect";
-            this.btnConnect.Size = new System.Drawing.Size(101, 23);
-            this.btnConnect.TabIndex = 4;
-            this.btnConnect.Text = "Connect";
-            this.btnConnect.UseVisualStyleBackColor = true;
-            this.btnConnect.Click += new System.EventHandler(this.btnConnect_Click);
             // 
             // openFileDlg
             // 
             this.openFileDlg.FileName = "openFileDialog1";
             // 
-            // btnOpen
+            // btnUpload
             // 
-            this.btnOpen.Location = new System.Drawing.Point(262, 304);
-            this.btnOpen.Name = "btnOpen";
-            this.btnOpen.Size = new System.Drawing.Size(168, 83);
-            this.btnOpen.TabIndex = 1;
-            this.btnOpen.Text = "Open and Send";
-            this.btnOpen.UseVisualStyleBackColor = true;
-            this.btnOpen.Click += new System.EventHandler(this.btnOpen_Click);
+            this.btnUpload.Location = new System.Drawing.Point(419, 243);
+            this.btnUpload.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btnUpload.Name = "btnUpload";
+            this.btnUpload.Size = new System.Drawing.Size(42, 41);
+            this.btnUpload.TabIndex = 1;
+            this.btnUpload.Text = "◀";
+            this.btnUpload.UseVisualStyleBackColor = true;
+            this.btnUpload.Click += new System.EventHandler(this.btnUpload_Click);
             // 
-            // labelHash
+            // viewClient
             // 
-            this.labelHash.AutoSize = true;
-            this.labelHash.Location = new System.Drawing.Point(295, 211);
-            this.labelHash.Name = "labelHash";
-            this.labelHash.Size = new System.Drawing.Size(92, 15);
-            this.labelHash.TabIndex = 2;
-            this.labelHash.Text = "MD5 for Test";
+            this.viewClient.Dock = System.Windows.Forms.DockStyle.Top;
+            this.viewClient.Location = new System.Drawing.Point(3, 17);
+            this.viewClient.Name = "viewClient";
+            this.viewClient.Size = new System.Drawing.Size(394, 294);
+            this.viewClient.TabIndex = 3;
+            this.viewClient.BeforeExpand += new System.Windows.Forms.TreeViewCancelEventHandler(this.viewClient_BeforeExpand);
+            this.viewClient.BeforeSelect += new System.Windows.Forms.TreeViewCancelEventHandler(this.viewClient_BeforeSelect);
+            // 
+            // listClient
+            // 
+            this.listClient.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.cliFileName,
+            this.cliFileSize,
+            this.cliFileDate});
+            this.listClient.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.listClient.Location = new System.Drawing.Point(3, 317);
+            this.listClient.Name = "listClient";
+            this.listClient.Size = new System.Drawing.Size(394, 367);
+            this.listClient.TabIndex = 4;
+            this.listClient.UseCompatibleStateImageBehavior = false;
+            this.listClient.View = System.Windows.Forms.View.Details;
+            this.listClient.Click += new System.EventHandler(this.listClient_Click);
+            this.listClient.DoubleClick += new System.EventHandler(this.listClient_DoubleClick);
+            // 
+            // cliFileName
+            // 
+            this.cliFileName.Text = "File Name";
+            this.cliFileName.Width = 157;
+            // 
+            // cliFileSize
+            // 
+            this.cliFileSize.Text = "File Size";
+            this.cliFileSize.Width = 93;
+            // 
+            // cliFileDate
+            // 
+            this.cliFileDate.Text = "Last Modified";
+            this.cliFileDate.Width = 208;
+            // 
+            // viewServer
+            // 
+            this.viewServer.Dock = System.Windows.Forms.DockStyle.Top;
+            this.viewServer.Location = new System.Drawing.Point(3, 17);
+            this.viewServer.Name = "viewServer";
+            this.viewServer.Size = new System.Drawing.Size(394, 294);
+            this.viewServer.TabIndex = 5;
+            // 
+            // listServer
+            // 
+            this.listServer.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.servFileName,
+            this.servFileSize,
+            this.servFileDate});
+            this.listServer.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.listServer.Location = new System.Drawing.Point(3, 317);
+            this.listServer.Name = "listServer";
+            this.listServer.Size = new System.Drawing.Size(394, 367);
+            this.listServer.TabIndex = 6;
+            this.listServer.UseCompatibleStateImageBehavior = false;
+            this.listServer.View = System.Windows.Forms.View.Details;
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.viewClient);
+            this.groupBox1.Controls.Add(this.listClient);
+            this.groupBox1.Dock = System.Windows.Forms.DockStyle.Right;
+            this.groupBox1.Location = new System.Drawing.Point(480, 0);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(400, 687);
+            this.groupBox1.TabIndex = 7;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Client";
+            // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.listServer);
+            this.groupBox2.Controls.Add(this.viewServer);
+            this.groupBox2.Dock = System.Windows.Forms.DockStyle.Left;
+            this.groupBox2.Location = new System.Drawing.Point(0, 0);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(400, 687);
+            this.groupBox2.TabIndex = 8;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Server";
+            // 
+            // servFileName
+            // 
+            this.servFileName.Text = "File Name";
+            this.servFileName.Width = 147;
+            // 
+            // servFileSize
+            // 
+            this.servFileSize.Text = "File Size";
+            this.servFileSize.Width = 81;
+            // 
+            // servFileDate
+            // 
+            this.servFileDate.Text = "Last Modified";
+            this.servFileDate.Width = 200;
             // 
             // FMClient
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(726, 454);
-            this.Controls.Add(this.labelHash);
-            this.Controls.Add(this.btnOpen);
+            this.ClientSize = new System.Drawing.Size(880, 687);
+            this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
+            this.Controls.Add(this.btnUpload);
+            this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.Name = "FMClient";
             this.Text = "FMClient";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.FMClient_FormClosed);
+            this.Load += new System.EventHandler(this.FMClient_Load);
             this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
+            this.groupBox2.ResumeLayout(false);
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
         #endregion
-
-        private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.Button btnConnect;
-        private System.Windows.Forms.TextBox txtPort;
-        private System.Windows.Forms.TextBox txtIP;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label label1;
         private System.Windows.Forms.OpenFileDialog openFileDlg;
-        private System.Windows.Forms.Button btnOpen;
-        private System.Windows.Forms.Label labelHash;
+        private System.Windows.Forms.Button btnUpload;
+        private System.Windows.Forms.TreeView viewClient;
+        private System.Windows.Forms.ListView listClient;
+        private System.Windows.Forms.ColumnHeader cliFileName;
+        private System.Windows.Forms.ColumnHeader cliFileSize;
+        private System.Windows.Forms.ColumnHeader cliFileDate;
+        private System.Windows.Forms.TreeView viewServer;
+        private System.Windows.Forms.ListView listServer;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.ColumnHeader servFileName;
+        private System.Windows.Forms.ColumnHeader servFileSize;
+        private System.Windows.Forms.ColumnHeader servFileDate;
     }
 }
 

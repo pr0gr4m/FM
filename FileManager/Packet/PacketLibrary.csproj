@@ -7,8 +7,8 @@
     <ProjectGuid>{76F33227-DFE7-4AF2-914E-DAC63157BC0A}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Packet</RootNamespace>
-    <AssemblyName>Packet</AssemblyName>
+    <RootNamespace>PacketLibrary</RootNamespace>
+    <AssemblyName>PacketLibrary</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -41,6 +41,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ACK.cs" />
+    <Compile Include="Case.cs" />
+    <Compile Include="DirList.cs" />
     <Compile Include="FileMeta.cs" />
     <Compile Include="Packet.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
