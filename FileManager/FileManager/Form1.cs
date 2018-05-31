@@ -104,6 +104,10 @@ namespace FileManager
                     case (int)PacketType.ReqDirList:
                         HandleReqDirList();
                         break;
+
+                    case (int)PacketType.ReqFileList:
+                        HandleReqFileList();
+                        break;
                 }
             }
         }
@@ -185,6 +189,38 @@ namespace FileManager
             DirList dirList = new DirList(list);
             Packet.Serialize(dirList).CopyTo(this.sendBuf, 0);
             this.Send();
+        }
+
+        private void SendSubFileList(string dir)
+        {
+            try
+            {
+                DirectoryInfo dirInfo = new DirectoryInfo(dir);
+                FileInfo[] fiArr = dirInfo.GetFiles();
+                FileMeta[] metas = new FileMeta[fiArr.Length];
+                int i = 0;
+                foreach (FileInfo fi in fiArr)
+                {
+                    FileMeta meta = new FileMeta(fi.Length, fi.Name,
+                        "", fi.LastWriteTime.ToString());
+                    metas[i++] = meta;
+                }
+                FileList fileList = new FileList(metas);
+                Packet.Serialize(fileList).CopyTo(this.sendBuf, 0);
+                this.Send();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
+        }
+
+        private void HandleReqFileList()
+        {
+            DirInfo dirInfo = (DirInfo)Packet.Deserialize(this.recvBuf);
+            SendSubFileList(pathDir + dirInfo.dirName);
+            pathCur = pathDir + dirInfo.dirName;
+            Directory.SetCurrentDirectory(pathCur);
         }
 
         private void HandleReqDirList()

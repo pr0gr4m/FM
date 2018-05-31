@@ -45,6 +45,7 @@
     <Compile Include="DirInfo.cs" />
     <Compile Include="DirList.cs" />
     <Compile Include="FileMeta.cs" />
+    <Compile Include="FileList.cs" />
     <Compile Include="Packet.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

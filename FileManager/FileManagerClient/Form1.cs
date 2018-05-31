@@ -270,7 +270,44 @@ namespace FileManagerClient
 
         private void viewServer_BeforeSelect(object sender, TreeViewCancelEventArgs e)
         {
+            string path = e.Node.FullPath;
+            ListViewItem item;
+            listServer.Items.Clear();
 
+            try
+            {
+                DirInfo dirInfo = new DirInfo(path);
+                dirInfo.Type = (int)PacketType.ReqDirList;
+                Packet.Serialize(dirInfo).CopyTo(this.sendBuf, 0);
+                this.Send();
+
+                Recv();
+                DirList dirList = (DirList)Packet.Deserialize(this.recvBuf);
+
+                foreach (string dir in dirList.dirList)
+                {
+                    item = listServer.Items.Add(dir);
+                    item.Tag = "D";
+                }
+
+                dirInfo.Type = (int)PacketType.ReqFileList;
+                Packet.Serialize(dirInfo).CopyTo(this.sendBuf, 0);
+                this.Send();
+
+                Recv();
+                FileList fileList = (FileList)Packet.Deserialize(this.recvBuf);
+                foreach (FileMeta meta in fileList.fileList)
+                {
+                    item = listServer.Items.Add(meta.fileName);
+                    item.SubItems.Add(meta.fileLength.ToString());
+                    item.SubItems.Add(meta.lastModified);
+                    item.Tag = "F";
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
         }
 
         private void listClient_DoubleClick(object sender, EventArgs e)
