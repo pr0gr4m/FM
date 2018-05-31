@@ -28,6 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FMClient));
             this.openFileDlg = new System.Windows.Forms.OpenFileDialog();
             this.btnUpload = new System.Windows.Forms.Button();
             this.viewClient = new System.Windows.Forms.TreeView();
@@ -42,6 +44,7 @@
             this.servFileDate = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.iconList = new System.Windows.Forms.ImageList(this.components);
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
@@ -64,8 +67,11 @@
             // viewClient
             // 
             this.viewClient.Dock = System.Windows.Forms.DockStyle.Top;
+            this.viewClient.ImageIndex = 1;
+            this.viewClient.ImageList = this.iconList;
             this.viewClient.Location = new System.Drawing.Point(3, 17);
             this.viewClient.Name = "viewClient";
+            this.viewClient.SelectedImageIndex = 0;
             this.viewClient.Size = new System.Drawing.Size(394, 294);
             this.viewClient.TabIndex = 3;
             this.viewClient.BeforeExpand += new System.Windows.Forms.TreeViewCancelEventHandler(this.viewClient_BeforeExpand);
@@ -78,9 +84,11 @@
             this.cliFileSize,
             this.cliFileDate});
             this.listClient.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.listClient.LargeImageList = this.iconList;
             this.listClient.Location = new System.Drawing.Point(3, 317);
             this.listClient.Name = "listClient";
             this.listClient.Size = new System.Drawing.Size(394, 367);
+            this.listClient.SmallImageList = this.iconList;
             this.listClient.TabIndex = 4;
             this.listClient.UseCompatibleStateImageBehavior = false;
             this.listClient.View = System.Windows.Forms.View.Details;
@@ -105,8 +113,11 @@
             // viewServer
             // 
             this.viewServer.Dock = System.Windows.Forms.DockStyle.Top;
+            this.viewServer.ImageIndex = 1;
+            this.viewServer.ImageList = this.iconList;
             this.viewServer.Location = new System.Drawing.Point(3, 17);
             this.viewServer.Name = "viewServer";
+            this.viewServer.SelectedImageIndex = 0;
             this.viewServer.Size = new System.Drawing.Size(394, 294);
             this.viewServer.TabIndex = 5;
             this.viewServer.BeforeExpand += new System.Windows.Forms.TreeViewCancelEventHandler(this.viewServer_BeforeExpand);
@@ -119,9 +130,11 @@
             this.servFileSize,
             this.servFileDate});
             this.listServer.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.listServer.LargeImageList = this.iconList;
             this.listServer.Location = new System.Drawing.Point(3, 317);
             this.listServer.Name = "listServer";
             this.listServer.Size = new System.Drawing.Size(394, 367);
+            this.listServer.SmallImageList = this.iconList;
             this.listServer.TabIndex = 6;
             this.listServer.UseCompatibleStateImageBehavior = false;
             this.listServer.View = System.Windows.Forms.View.Details;
@@ -165,6 +178,14 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Server";
             // 
+            // iconList
+            // 
+            this.iconList.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("iconList.ImageStream")));
+            this.iconList.TransparentColor = System.Drawing.Color.Transparent;
+            this.iconList.Images.SetKeyName(0, "case-icon.png");
+            this.iconList.Images.SetKeyName(1, "folder-icon.png");
+            this.iconList.Images.SetKeyName(2, "file-icon.png");
+            // 
             // FMClient
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
@@ -199,6 +220,7 @@
         private System.Windows.Forms.ColumnHeader servFileName;
         private System.Windows.Forms.ColumnHeader servFileSize;
         private System.Windows.Forms.ColumnHeader servFileDate;
+        private System.Windows.Forms.ImageList iconList;
     }
 }
 

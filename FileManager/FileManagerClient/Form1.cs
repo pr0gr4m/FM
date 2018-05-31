@@ -76,11 +76,11 @@ namespace FileManagerClient
             foreach (string drv in drvList)
             {
                 root = viewClient.Nodes.Add(drv);
-                //root.ImageIndex = 2;
+                root.ImageIndex = 1;
 
                 if (viewClient.SelectedNode == null)
                     viewClient.SelectedNode = root;
-                //root.SelectedImageIndex = root.ImageIndex;
+                root.SelectedImageIndex = root.ImageIndex;
                 root.Nodes.Add("");
             }
         }
@@ -89,6 +89,7 @@ namespace FileManagerClient
         {
             TreeNode root = new TreeNode(caseName);
             root.Tag = "C";
+            root.ImageIndex = 0;
 
             Recv();
             DirList dirList = (DirList)Packet.Deserialize(this.recvBuf);
@@ -100,6 +101,7 @@ namespace FileManagerClient
                 root.Nodes.Add(subNode);
             }
             viewServer.Nodes.Add(root);
+            viewServer.SelectedNode = root;
         }
 
         private void SetPlus(TreeNode node)
@@ -248,7 +250,7 @@ namespace FileManagerClient
                     item = listClient.Items.Add(tdis.Name);
                     item.SubItems.Add("");
                     item.SubItems.Add(tdis.LastWriteTime.ToString());
-                    //item.ImageIndex = 0;
+                    item.ImageIndex = 1;
                     item.Tag = "D";
                 }
 
@@ -258,7 +260,7 @@ namespace FileManagerClient
                     item = listClient.Items.Add(fis.Name);
                     item.SubItems.Add(fis.Length.ToString());
                     item.SubItems.Add(fis.LastWriteTime.ToString());
-                    //item.ImageIndex = 1;
+                    item.ImageIndex = 2;
                     item.Tag = "F";
                 }
             }
@@ -287,6 +289,7 @@ namespace FileManagerClient
                 foreach (string dir in dirList.dirList)
                 {
                     item = listServer.Items.Add(dir);
+                    item.ImageIndex = 1;
                     item.Tag = "D";
                 }
 
@@ -301,6 +304,7 @@ namespace FileManagerClient
                     item = listServer.Items.Add(meta.fileName);
                     item.SubItems.Add(meta.fileLength.ToString());
                     item.SubItems.Add(meta.lastModified);
+                    item.ImageIndex = 2;
                     item.Tag = "F";
                 }
             }
@@ -320,27 +324,41 @@ namespace FileManagerClient
         {
             SelectFiles();
         }
-        
-        private void btnUpload_Click(object sender, EventArgs e)
+
+        private void SendFile(string fileName)
         {
-            FileInfo f = new FileInfo(filePath);
-            string md5 = PUtility.CalculateMD5(filePath);
+            FileInfo f = new FileInfo(fileName);
+            string md5 = PUtility.CalculateMD5(fileName);
             FileMeta fileMeta = new FileMeta(
                 f.Length,
-                filePath,
+                fileName,
                 md5);
             fileMeta.Type = (int)PacketType.FileMeta;
             Packet.Serialize(fileMeta).CopyTo(this.sendBuf, 0);
             this.Send();
 
-            byte[] file = File.ReadAllBytes(filePath);
-            
+            Recv();
+            ACK ack = (ACK)Packet.Deserialize(this.recvBuf);
+            if (ack.isOK == false)
+            {   // same name file
+                ack = new ACK(false);
+                if (MessageBox.Show("A same name already exists.\r\n\r\n" +
+                    "Do you want version control?", "FM", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                {
+                    ack.isOK = true;
+                }
+                Packet.Serialize(ack).CopyTo(this.sendBuf, 0);
+                this.Send();
+            }
+
+            byte[] file = File.ReadAllBytes(fileName);
+
             this.stream.Write(file, 0, file.Length);
             this.stream.Flush();
-            
+
             Recv();
 
-            ACK ack = (ACK)Packet.Deserialize(this.recvBuf);
+            ack = (ACK)Packet.Deserialize(this.recvBuf);
             if (ack.isOK)
             {
                 MessageBox.Show("성공적으로 업로드하였습니다!");
@@ -349,6 +367,11 @@ namespace FileManagerClient
             {
                 MessageBox.Show("파일 업로드 실패");
             }
+        }
+        
+        private void btnUpload_Click(object sender, EventArgs e)
+        {
+            SendFile(filePath);
         }
 
         private void FMClient_FormClosed(object sender, FormClosedEventArgs e)

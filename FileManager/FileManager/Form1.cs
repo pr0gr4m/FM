@@ -219,7 +219,7 @@ namespace FileManager
         {
             DirInfo dirInfo = (DirInfo)Packet.Deserialize(this.recvBuf);
             SendSubFileList(pathDir + dirInfo.dirName);
-            pathCur = pathDir + dirInfo.dirName;
+            pathCur = pathDir + dirInfo.dirName + "\\";
             Directory.SetCurrentDirectory(pathCur);
         }
 
@@ -237,6 +237,36 @@ namespace FileManager
                 txtLog.AppendText("File Name : " + fileMeta.fileName + "\r\n");
                 txtLog.AppendText("File Hash : " + fileMeta.md5Hash + "\r\n");
             }));
+
+            ACK ack = new ACK();
+            ack.Type = (int)PacketType.ACK;
+            if (File.Exists(pathCur + Path.GetFileName(fileMeta.fileName)))
+            {
+                ack.isOK = false;
+                Packet.Serialize(ack).CopyTo(this.sendBuf, 0);
+                this.Send();
+
+                Recv();
+                ack = (ACK)Packet.Deserialize(this.recvBuf);
+
+                if (ack.isOK == true)
+                {
+                    // version
+                    try
+                    {
+                        PUtility.CompressWithVersion(pathCur + Path.GetFileName(fileMeta.fileName));
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.ToString());
+                    }
+                }
+            }
+            else
+            {
+                Packet.Serialize(ack).CopyTo(this.sendBuf, 0);
+                this.Send();
+            }
 
             FileStream fs = File.Open(pathCur + 
                 Path.GetFileName(fileMeta.fileName), FileMode.Create);

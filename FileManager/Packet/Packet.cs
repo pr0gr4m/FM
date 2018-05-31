@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
+using System.IO.Compression;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Net;
 
@@ -44,6 +45,32 @@ namespace PacketLibrary
                     return ip.ToString();
             }
             throw new Exception("There is no NIC for IPv4");
+        }
+        public static void CompressWithVersion(string fileName)
+        {
+            FileInfo fileToCompress = new FileInfo(fileName);
+
+            using (FileStream originalFileStream = fileToCompress.OpenRead())
+            {
+                if ((File.GetAttributes(fileToCompress.FullName) &
+                    FileAttributes.Hidden) != FileAttributes.Hidden & fileToCompress.Extension != ".gz")
+                {
+                    using (FileStream compressedFileStream = File.Create(Path.GetFileNameWithoutExtension(fileToCompress.FullName) +
+                        "_" + DateTime.Now.ToString("yyMMddHHmmss") + fileToCompress.Extension + ".gz"))
+                    {
+                        using (GZipStream compressionStream = new GZipStream(compressedFileStream,
+                            CompressionMode.Compress))
+                        {
+                            originalFileStream.CopyTo(compressionStream);
+                        }
+                    }
+                }
+            }
+            if (File.Exists(Path.GetFileNameWithoutExtension(fileToCompress.FullName) + ".gpg"))
+            {
+                File.Move(Path.GetFileNameWithoutExtension(fileToCompress.FullName) + ".gpg",
+                    Path.GetFileNameWithoutExtension(fileToCompress.FullName) + "_" + DateTime.Now.ToString("yyMMddHHmmss") + ".gpg");
+            }
         }
     }
 
