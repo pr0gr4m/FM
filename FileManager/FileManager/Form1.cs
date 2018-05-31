@@ -18,6 +18,7 @@ namespace FileManager
 
         private Thread thread;
         private string pathDir = @"C:\FMServer\";
+        private string pathCur;
 
         public FMServer()
         {
@@ -99,6 +100,10 @@ namespace FileManager
                     case (int)PacketType.FileMeta:
                         HandleFileMeta();
                         break;
+
+                    case (int)PacketType.ReqDirList:
+                        HandleReqDirList();
+                        break;
                 }
             }
         }
@@ -160,8 +165,7 @@ namespace FileManager
         {
             Case c = (Case)Packet.Deserialize(this.recvBuf);
             Directory.SetCurrentDirectory(c.caseName);
-            pathDir += c.caseName;
-
+            pathCur = pathDir + c.caseName + "\\";
             this.Invoke(new MethodInvoker(delegate ()
             {
                 txtLog.AppendText("Case Name : " + c.caseName + "\r\n");
@@ -183,6 +187,12 @@ namespace FileManager
             this.Send();
         }
 
+        private void HandleReqDirList()
+        {
+            DirInfo dirInfo = (DirInfo)Packet.Deserialize(this.recvBuf);
+            SendSubDirList(pathDir + dirInfo.dirName);
+        }
+
         private void HandleFileMeta()
         {
             FileMeta fileMeta = (FileMeta)Packet.Deserialize(this.recvBuf);
@@ -192,7 +202,7 @@ namespace FileManager
                 txtLog.AppendText("File Hash : " + fileMeta.md5Hash + "\r\n");
             }));
 
-            FileStream fs = File.Open(pathDir + 
+            FileStream fs = File.Open(pathCur + 
                 Path.GetFileName(fileMeta.fileName), FileMode.Create);
             BinaryWriter writer = new BinaryWriter(fs);
 
@@ -224,7 +234,7 @@ namespace FileManager
                 fs.Close();
             }
 
-            string md5 = PUtility.CalculateMD5(pathDir +
+            string md5 = PUtility.CalculateMD5(pathCur +
                 Path.GetFileName(fileMeta.fileName));
             if (String.Compare(md5, fileMeta.md5Hash) == 0)
             {
@@ -234,7 +244,7 @@ namespace FileManager
                 Packet.Serialize(ackSuc).CopyTo(this.sendBuf, 0);
                 this.Send();
 
-                File.WriteAllText(pathDir + 
+                File.WriteAllText(pathCur + 
                     Path.GetFileNameWithoutExtension(fileMeta.fileName) +
                     ".gpg", md5);
             }

@@ -37,11 +37,11 @@
             this.cliFileDate = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.viewServer = new System.Windows.Forms.TreeView();
             this.listServer = new System.Windows.Forms.ListView();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.servFileName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.servFileSize = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.servFileDate = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
@@ -109,6 +109,8 @@
             this.viewServer.Name = "viewServer";
             this.viewServer.Size = new System.Drawing.Size(394, 294);
             this.viewServer.TabIndex = 5;
+            this.viewServer.BeforeExpand += new System.Windows.Forms.TreeViewCancelEventHandler(this.viewServer_BeforeExpand);
+            this.viewServer.BeforeSelect += new System.Windows.Forms.TreeViewCancelEventHandler(this.viewServer_BeforeSelect);
             // 
             // listServer
             // 
@@ -123,6 +125,21 @@
             this.listServer.TabIndex = 6;
             this.listServer.UseCompatibleStateImageBehavior = false;
             this.listServer.View = System.Windows.Forms.View.Details;
+            // 
+            // servFileName
+            // 
+            this.servFileName.Text = "File Name";
+            this.servFileName.Width = 147;
+            // 
+            // servFileSize
+            // 
+            this.servFileSize.Text = "File Size";
+            this.servFileSize.Width = 81;
+            // 
+            // servFileDate
+            // 
+            this.servFileDate.Text = "Last Modified";
+            this.servFileDate.Width = 200;
             // 
             // groupBox1
             // 
@@ -147,21 +164,6 @@
             this.groupBox2.TabIndex = 8;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Server";
-            // 
-            // servFileName
-            // 
-            this.servFileName.Text = "File Name";
-            this.servFileName.Width = 147;
-            // 
-            // servFileSize
-            // 
-            this.servFileSize.Text = "File Size";
-            this.servFileSize.Width = 81;
-            // 
-            // servFileDate
-            // 
-            this.servFileDate.Text = "Last Modified";
-            this.servFileDate.Width = 200;
             // 
             // FMClient
             // 

@@ -42,6 +42,7 @@
   <ItemGroup>
     <Compile Include="ACK.cs" />
     <Compile Include="Case.cs" />
+    <Compile Include="DirInfo.cs" />
     <Compile Include="DirList.cs" />
     <Compile Include="FileMeta.cs" />
     <Compile Include="Packet.cs" />

@@ -87,7 +87,6 @@ namespace FileManagerClient
 
         private void PopulateServerTreeView()
         {
-            MessageBox.Show(caseName);
             TreeNode root = new TreeNode(caseName);
             root.Tag = "C";
 
@@ -201,6 +200,35 @@ namespace FileManagerClient
             }
         }
 
+        private void viewServer_BeforeExpand(object sender, TreeViewCancelEventArgs e)
+        {
+            string path;
+            TreeNode node;
+
+            try
+            {
+                e.Node.Nodes.Clear();
+                path = e.Node.FullPath;
+                DirInfo dirInfo = new DirInfo(path);
+                dirInfo.Type = (int)PacketType.ReqDirList;
+                Packet.Serialize(dirInfo).CopyTo(this.sendBuf, 0);
+                this.Send();
+
+                Recv();
+                DirList dirList = (DirList)Packet.Deserialize(this.recvBuf);
+
+                foreach (string dir in dirList.dirList)
+                {
+                    node = e.Node.Nodes.Add(dir);
+                    node.Nodes.Add("");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
         private void viewClient_BeforeSelect(object sender, TreeViewCancelEventArgs e)
         {
             DirectoryInfo di;
@@ -238,6 +266,11 @@ namespace FileManagerClient
             {
                 MessageBox.Show(ex.Message);
             }
+        }
+
+        private void viewServer_BeforeSelect(object sender, TreeViewCancelEventArgs e)
+        {
+
         }
 
         private void listClient_DoubleClick(object sender, EventArgs e)
@@ -291,5 +324,6 @@ namespace FileManagerClient
             PopulateClientTreeView();
             PopulateServerTreeView();
         }
+
     }
 }
