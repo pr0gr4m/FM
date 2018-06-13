@@ -108,6 +108,10 @@ namespace FileManager
                     case (int)PacketType.ReqFileList:
                         HandleReqFileList();
                         break;
+
+                    case (int)PacketType.ReqFile:
+                        HandleReqFile();
+                        break;
                 }
             }
         }
@@ -215,6 +219,49 @@ namespace FileManager
             }
         }
 
+        private void HandleReqFile()
+        {
+            FileMeta reqFile = (FileMeta)Packet.Deserialize(this.recvBuf);
+
+            this.Invoke((MethodInvoker)(() => {
+                txtLog.AppendText(pathCur + reqFile.fileName + " start\r\n");
+            }));
+
+            FileInfo f = new FileInfo(pathCur + reqFile.fileName);
+
+            FileMeta fileMeta = new FileMeta(
+                f.Length,
+                reqFile.fileName,
+                "");
+            fileMeta.Type = (int)PacketType.FileMeta;
+            Packet.Serialize(fileMeta).CopyTo(this.sendBuf, 0);
+            this.Send();
+
+            if (f.Length != 0)
+            {
+                byte[] file = File.ReadAllBytes(pathCur + reqFile.fileName);
+
+                this.stream.Write(file, 0, file.Length);
+                this.stream.Flush();
+            }
+
+            Recv();
+
+            ACK ack = (ACK)Packet.Deserialize(this.recvBuf);
+            if (ack.isOK)
+            {
+                this.Invoke((MethodInvoker)(() => {
+                    txtLog.AppendText("download " + reqFile.fileName + " success\r\n");
+                }));
+            }
+            else
+            {
+                this.Invoke((MethodInvoker)(() => {
+                    txtLog.AppendText("download " + reqFile.fileName + " failure\r\n");
+                }));
+            }
+        }
+
         private void HandleReqFileList()
         {
             DirInfo dirInfo = (DirInfo)Packet.Deserialize(this.recvBuf);
@@ -277,13 +324,16 @@ namespace FileManager
             byte[] buff = new byte[PUtility.BUF_LEN];
             try
             {
-                while ((nRecv = stream.Read(buff, 0, buff.Length)) > 0)
+                if (fileMeta.fileLength != 0)
                 {
-                    writer.Write(buff, 0, nRecv);
-                    writer.Flush();
-                    nRemain -= nRecv;
-                    if (nRemain <= 0)
-                        break;
+                    while ((nRecv = stream.Read(buff, 0, buff.Length)) > 0)
+                    {
+                        writer.Write(buff, 0, nRecv);
+                        writer.Flush();
+                        nRemain -= nRecv;
+                        if (nRemain <= 0)
+                            break;
+                    }
                 }
             }
             catch

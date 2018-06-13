@@ -33,6 +33,7 @@
             this.openFileDlg = new System.Windows.Forms.OpenFileDialog();
             this.btnUpload = new System.Windows.Forms.Button();
             this.viewClient = new System.Windows.Forms.TreeView();
+            this.iconList = new System.Windows.Forms.ImageList(this.components);
             this.listClient = new System.Windows.Forms.ListView();
             this.cliFileName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.cliFileSize = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -44,7 +45,7 @@
             this.servFileDate = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.iconList = new System.Windows.Forms.ImageList(this.components);
+            this.btnDownload = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
@@ -58,7 +59,7 @@
             this.btnUpload.Location = new System.Drawing.Point(419, 243);
             this.btnUpload.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnUpload.Name = "btnUpload";
-            this.btnUpload.Size = new System.Drawing.Size(42, 41);
+            this.btnUpload.Size = new System.Drawing.Size(42, 42);
             this.btnUpload.TabIndex = 1;
             this.btnUpload.Text = "◀";
             this.btnUpload.UseVisualStyleBackColor = true;
@@ -76,6 +77,14 @@
             this.viewClient.TabIndex = 3;
             this.viewClient.BeforeExpand += new System.Windows.Forms.TreeViewCancelEventHandler(this.viewClient_BeforeExpand);
             this.viewClient.BeforeSelect += new System.Windows.Forms.TreeViewCancelEventHandler(this.viewClient_BeforeSelect);
+            // 
+            // iconList
+            // 
+            this.iconList.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("iconList.ImageStream")));
+            this.iconList.TransparentColor = System.Drawing.Color.Transparent;
+            this.iconList.Images.SetKeyName(0, "case-icon.png");
+            this.iconList.Images.SetKeyName(1, "folder-icon.png");
+            this.iconList.Images.SetKeyName(2, "file-icon.png");
             // 
             // listClient
             // 
@@ -138,6 +147,7 @@
             this.listServer.TabIndex = 6;
             this.listServer.UseCompatibleStateImageBehavior = false;
             this.listServer.View = System.Windows.Forms.View.Details;
+            this.listServer.Click += new System.EventHandler(this.listServer_Click);
             // 
             // servFileName
             // 
@@ -178,19 +188,22 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Server";
             // 
-            // iconList
+            // btnDownload
             // 
-            this.iconList.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("iconList.ImageStream")));
-            this.iconList.TransparentColor = System.Drawing.Color.Transparent;
-            this.iconList.Images.SetKeyName(0, "case-icon.png");
-            this.iconList.Images.SetKeyName(1, "folder-icon.png");
-            this.iconList.Images.SetKeyName(2, "file-icon.png");
+            this.btnDownload.Location = new System.Drawing.Point(419, 345);
+            this.btnDownload.Name = "btnDownload";
+            this.btnDownload.Size = new System.Drawing.Size(42, 42);
+            this.btnDownload.TabIndex = 9;
+            this.btnDownload.Text = "▶";
+            this.btnDownload.UseVisualStyleBackColor = true;
+            this.btnDownload.Click += new System.EventHandler(this.btnDownload_Click);
             // 
             // FMClient
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(880, 687);
+            this.Controls.Add(this.btnDownload);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.btnUpload);
@@ -221,6 +234,7 @@
         private System.Windows.Forms.ColumnHeader servFileSize;
         private System.Windows.Forms.ColumnHeader servFileDate;
         private System.Windows.Forms.ImageList iconList;
+        private System.Windows.Forms.Button btnDownload;
     }
 }
 

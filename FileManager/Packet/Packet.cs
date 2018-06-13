@@ -16,6 +16,7 @@ namespace PacketLibrary
         Case,
         CaseSelected,
         FileMeta,
+        ReqFile,
         ReqDirList,
         ReqFileList,
         EOP     // End of Packet

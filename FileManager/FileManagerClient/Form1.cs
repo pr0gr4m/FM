@@ -24,6 +24,7 @@ namespace FileManagerClient
 
         private string dirPath = null;
         private string filePath = null;
+        private string servFile = null;
         private Action closeConnect;
         private string caseName;
         
@@ -148,6 +149,20 @@ namespace FileManagerClient
                 filePath = dirPath + "\\" + item.Text;
         }
 
+        private void SelectServerFiles()
+        {
+            servFile = listServer.FocusedItem.Text;
+            /*
+            ListView.SelectedListViewItemCollection siList;
+            siList = listClient.SelectedItems;
+
+            foreach (ListViewItem item in siList)
+            {
+                servFile = item.Text;
+            }
+            */
+        }
+
         private void OpenItem(ListViewItem item)
         {
             TreeNode node, child;
@@ -172,7 +187,26 @@ namespace FileManagerClient
             }
             else
             {
-                Process.Start(dirPath + "\\" + item.Text);
+                switch (Path.GetExtension(item.Text))
+                {
+                    case ".txt":
+                        TextViewer tv = new TextViewer();
+                        tv.getTextBox().Text = File.ReadAllText(dirPath + "\\" + item.Text);
+                        tv.Show();
+                        break;
+
+                    case ".jpg":
+                    case ".png":
+                        PictureViewer pv = new PictureViewer();
+                        pv.getPictureBox().Image = Image.FromFile(@dirPath + "\\" + item.Text);
+                        pv.Show();
+                        break;
+
+                    default:
+
+                        Process.Start(dirPath + "\\" + item.Text);
+                        break;
+                }
             }
         }
 
@@ -351,10 +385,13 @@ namespace FileManagerClient
                 this.Send();
             }
 
-            byte[] file = File.ReadAllBytes(fileName);
+            if (f.Length != 0)
+            {
+                byte[] file = File.ReadAllBytes(fileName);
 
-            this.stream.Write(file, 0, file.Length);
-            this.stream.Flush();
+                this.stream.Write(file, 0, file.Length);
+                this.stream.Flush();
+            }
 
             Recv();
 
@@ -367,6 +404,63 @@ namespace FileManagerClient
             {
                 MessageBox.Show("파일 업로드 실패");
             }
+        }
+
+        private void RecvFile(string fileName)
+        {
+            FileMeta reqFile = new FileMeta(
+                0,
+                fileName,
+                "");
+            reqFile.Type = (int)PacketType.ReqFile;
+            Packet.Serialize(reqFile).CopyTo(this.sendBuf, 0);
+            this.Send();
+
+            Recv();
+
+            FileMeta fileMeta = (FileMeta)Packet.Deserialize(this.recvBuf);
+
+            FileStream fs = File.Open(dirPath + "\\" +
+                Path.GetFileName(fileMeta.fileName), FileMode.Create);
+            BinaryWriter writer = new BinaryWriter(fs);
+
+            int nRecv = 0;
+            long nRemain = fileMeta.fileLength;
+            byte[] buff = new byte[PUtility.BUF_LEN];
+            try
+            {
+                if (fileMeta.fileLength != 0)
+                {
+                    while ((nRecv = stream.Read(buff, 0, buff.Length)) > 0)
+                    {
+                        writer.Write(buff, 0, nRecv);
+                        writer.Flush();
+                        nRemain -= nRecv;
+                        if (nRemain <= 0)
+                            break;
+                    }
+                }
+            }
+            catch
+            {
+                ACK ackFail = new ACK(false);
+                ackFail.Type = (int)PacketType.ACK;
+
+                Packet.Serialize(ackFail).CopyTo(this.sendBuf, 0);
+                this.Send();
+            }
+            finally
+            {
+                writer.Close();
+                fs.Close();
+            }
+
+            ACK ackSuc = new ACK();
+            ackSuc.Type = (int)PacketType.ACK;
+            MessageBox.Show("Recv Success");
+
+            Packet.Serialize(ackSuc).CopyTo(this.sendBuf, 0);
+            this.Send();
         }
         
         private void btnUpload_Click(object sender, EventArgs e)
@@ -385,5 +479,15 @@ namespace FileManagerClient
             PopulateServerTreeView();
         }
 
+        private void btnDownload_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show(servFile);
+            RecvFile(servFile);
+        }
+
+        private void listServer_Click(object sender, EventArgs e)
+        {
+            SelectServerFiles();
+        }
     }
 }
