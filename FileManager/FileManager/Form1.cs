@@ -16,9 +16,11 @@ namespace FileManager
         private byte[] sendBuf = new byte[PUtility.BUF_LEN];
         private byte[] recvBuf = new byte[PUtility.BUF_LEN];
 
-        private Thread thread;
+        private Thread thread = null;
         private string pathDir = @"C:\FMServer\";
         private string pathCur;
+
+        bool isOn = false;
 
         public FMServer()
         {
@@ -42,7 +44,13 @@ namespace FileManager
             }
             catch
             {
-                MessageBox.Show("IO Error");
+                this.Invoke(new MethodInvoker(delegate ()
+                {
+                    txtLog.AppendText("Client Disconnect...\r\n");
+                    this.stream.Close();
+                    this.listener.Stop();
+                    this.thread.Abort();
+                }));
             }
 
             if (nRead == 0)
@@ -394,8 +402,19 @@ namespace FileManager
 
         private void btnStart_Click(object sender, EventArgs e)
         {
-            this.thread = new Thread(new ThreadStart(Run));
-            this.thread.Start();
+            if (!isOn)
+            {
+                this.thread = new Thread(new ThreadStart(Run));
+                this.thread.Start();
+
+                isOn = true;
+                btnStart.Text = "Close";
+                btnStart.ForeColor = System.Drawing.Color.Red;
+            }
+            else
+            {
+                this.Close();
+            }
         }
 
         private void SetDirectory()
@@ -414,6 +433,16 @@ namespace FileManager
         {
             txtIP.Text = PUtility.GetLocalIP();
             SetDirectory();
+        }
+
+        private void FMServer_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (stream != null)
+                this.stream.Close();
+            if (listener != null)
+                this.listener.Stop();
+            if (thread != null)
+                this.thread.Abort();
         }
     }
 }

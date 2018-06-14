@@ -98,6 +98,7 @@
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.Name = "FMServer";
             this.Text = "FMServer";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FMServer_FormClosing);
             this.Load += new System.EventHandler(this.FMServer_Load);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();

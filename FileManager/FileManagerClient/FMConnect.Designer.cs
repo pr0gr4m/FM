@@ -52,7 +52,7 @@
             // 
             this.txtIP.Location = new System.Drawing.Point(76, 33);
             this.txtIP.Name = "txtIP";
-            this.txtIP.Size = new System.Drawing.Size(269, 21);
+            this.txtIP.Size = new System.Drawing.Size(244, 21);
             this.txtIP.TabIndex = 1;
             // 
             // groupBox1
@@ -99,9 +99,9 @@
             // 
             // btnConnect
             // 
-            this.btnConnect.Location = new System.Drawing.Point(351, 32);
+            this.btnConnect.Location = new System.Drawing.Point(326, 32);
             this.btnConnect.Name = "btnConnect";
-            this.btnConnect.Size = new System.Drawing.Size(90, 23);
+            this.btnConnect.Size = new System.Drawing.Size(115, 23);
             this.btnConnect.TabIndex = 3;
             this.btnConnect.Text = "Connect";
             this.btnConnect.UseVisualStyleBackColor = true;

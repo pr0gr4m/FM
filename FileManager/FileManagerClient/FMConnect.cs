@@ -21,6 +21,8 @@ namespace FileManagerClient
         private byte[] sendBuf = new byte[PUtility.BUF_LEN];
         private byte[] recvBuf = new byte[PUtility.BUF_LEN];
 
+        bool isConnect = false;
+
         private void Send()
         {
             this.stream.Write(this.sendBuf, 0, this.sendBuf.Length);
@@ -61,6 +63,7 @@ namespace FileManagerClient
             }
             this.stream = this.client.GetStream();
             this.btnConnect.Enabled = false;
+            this.btnConnect.Text = "Connected";
             InitCase();
         }
 

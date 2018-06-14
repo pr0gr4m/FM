@@ -480,6 +480,7 @@ namespace FileManagerClient
                 this.Send();
                 PUtility.CompressDirectoryTmp(fdirPath);
                 SendFile(fdirPath + ".tmp.zip");
+                File.Delete(fdirPath + ".tmp.zip");
             }
             var item = viewServer.SelectedNode;
             viewServer.SelectedNode = null;
@@ -509,6 +510,7 @@ namespace FileManagerClient
                 this.Send();
                 RecvFile(servFile + ".tmp.zip");
                 PUtility.ExtractDirectoryTmp(dirPath + "\\" + Path.GetFileName(servFile + ".tmp.zip"));
+                File.Delete(dirPath + "\\" + Path.GetFileName(servFile + ".tmp.zip"));
             }
             var item = viewClient.SelectedNode;
             viewClient.SelectedNode = null;
