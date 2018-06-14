@@ -16,7 +16,9 @@ namespace PacketLibrary
         Case,
         CaseSelected,
         FileMeta,
+        SendDir,
         ReqFile,
+        ReqDir,
         ReqDirList,
         ReqFileList,
         EOP     // End of Packet
@@ -72,6 +74,16 @@ namespace PacketLibrary
                 File.Move(Path.GetFileNameWithoutExtension(fileToCompress.FullName) + ".gpg",
                     Path.GetFileNameWithoutExtension(fileToCompress.FullName) + "_" + DateTime.Now.ToString("yyMMddHHmmss") + ".gpg");
             }
+        }
+        public static void CompressDirectoryTmp(string dirName)
+        {
+            if (File.Exists(dirName + ".tmp.zip"))
+                File.Delete(dirName + ".tmp.zip");
+            ZipFile.CreateFromDirectory(dirName, dirName + ".tmp.zip");
+        }
+        public static void ExtractDirectoryTmp(string zipName)
+        {
+            ZipFile.ExtractToDirectory(zipName, zipName.Substring(0, zipName.Length - 8));
         }
     }
 

@@ -24,6 +24,7 @@ namespace FileManagerClient
 
         private string dirPath = null;
         private string filePath = null;
+        private string fdirPath = null;
         private string servFile = null;
         private Action closeConnect;
         private string caseName;
@@ -147,6 +148,8 @@ namespace FileManagerClient
         {
             if (item.Tag.ToString() == "F")
                 filePath = dirPath + "\\" + item.Text;
+            else if (item.Tag.ToString() == "D")
+                fdirPath = dirPath + "\\" + item.Text;
         }
 
         private void SelectServerFiles()
@@ -398,7 +401,7 @@ namespace FileManagerClient
             ack = (ACK)Packet.Deserialize(this.recvBuf);
             if (ack.isOK)
             {
-                MessageBox.Show("성공적으로 업로드하였습니다!");
+                //MessageBox.Show("성공적으로 업로드하였습니다!");
             }
             else
             {
@@ -457,7 +460,7 @@ namespace FileManagerClient
 
             ACK ackSuc = new ACK();
             ackSuc.Type = (int)PacketType.ACK;
-            MessageBox.Show("Recv Success");
+            //MessageBox.Show("Recv Success");
 
             Packet.Serialize(ackSuc).CopyTo(this.sendBuf, 0);
             this.Send();
@@ -465,7 +468,22 @@ namespace FileManagerClient
         
         private void btnUpload_Click(object sender, EventArgs e)
         {
-            SendFile(filePath);
+            if (listClient.SelectedItems[0].Tag.ToString() == "F")
+            {
+                SendFile(filePath);
+            }
+            else if (listClient.SelectedItems[0].Tag.ToString() == "D")
+            {
+                FileMeta finfo = new FileMeta(0, fdirPath + ".tmp.zip", "");
+                finfo.Type = (int)PacketType.SendDir;
+                Packet.Serialize(finfo).CopyTo(this.sendBuf, 0);
+                this.Send();
+                PUtility.CompressDirectoryTmp(fdirPath);
+                SendFile(fdirPath + ".tmp.zip");
+            }
+            var item = viewServer.SelectedNode;
+            viewServer.SelectedNode = null;
+            viewServer.SelectedNode = item;
         }
 
         private void FMClient_FormClosed(object sender, FormClosedEventArgs e)
@@ -481,8 +499,20 @@ namespace FileManagerClient
 
         private void btnDownload_Click(object sender, EventArgs e)
         {
-            MessageBox.Show(servFile);
-            RecvFile(servFile);
+            if (listServer.SelectedItems[0].Tag.ToString() == "F")
+                RecvFile(servFile);
+            else if (listServer.SelectedItems[0].Tag.ToString() == "D")
+            {
+                FileMeta finfo = new FileMeta(0, servFile, "");
+                finfo.Type = (int)PacketType.ReqDir;
+                Packet.Serialize(finfo).CopyTo(this.sendBuf, 0);
+                this.Send();
+                RecvFile(servFile + ".tmp.zip");
+                PUtility.ExtractDirectoryTmp(dirPath + "\\" + Path.GetFileName(servFile + ".tmp.zip"));
+            }
+            var item = viewClient.SelectedNode;
+            viewClient.SelectedNode = null;
+            viewClient.SelectedNode = item;
         }
 
         private void listServer_Click(object sender, EventArgs e)

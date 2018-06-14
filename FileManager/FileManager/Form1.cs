@@ -101,6 +101,16 @@ namespace FileManager
                         HandleFileMeta();
                         break;
 
+                    case (int)PacketType.SendDir:
+                        FileMeta finfo = (FileMeta)Packet.Deserialize(this.recvBuf);
+                        Recv();
+                        HandleFileMeta();
+                        PUtility.ExtractDirectoryTmp(pathCur + 
+                            Path.GetFileName(finfo.fileName));
+                        File.Delete(pathCur +
+                            Path.GetFileName(finfo.fileName));
+                        break;
+
                     case (int)PacketType.ReqDirList:
                         HandleReqDirList();
                         break;
@@ -111,6 +121,14 @@ namespace FileManager
 
                     case (int)PacketType.ReqFile:
                         HandleReqFile();
+                        break;
+
+                    case (int)PacketType.ReqDir:
+                        FileMeta dinfo = (FileMeta)Packet.Deserialize(this.recvBuf);
+                        PUtility.CompressDirectoryTmp(pathCur + dinfo.fileName);
+                        Recv();
+                        HandleReqFile();
+                        File.Delete(pathCur + dinfo.fileName + ".tmp.zip");
                         break;
                 }
             }
