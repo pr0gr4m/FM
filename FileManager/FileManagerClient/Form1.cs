@@ -521,5 +521,25 @@ namespace FileManagerClient
         {
             SelectServerFiles();
         }
+
+        private void listServer_DoubleClick(object sender, EventArgs e)
+        {
+            if (listServer.SelectedItems[0].Tag.ToString() == "D")
+            {
+                TreeNode node, child;
+
+                node = viewServer.SelectedNode;
+                node.Expand();
+
+                child = node.FirstNode;
+                while (child.Text == listServer.SelectedItems[0].Text)
+                {
+                    viewServer.SelectedNode = child;
+                    viewServer.Focus();
+                    break;
+                }
+                child = child.NextNode;
+            }
+        }
     }
 }

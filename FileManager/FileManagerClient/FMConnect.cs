@@ -114,6 +114,7 @@ namespace FileManagerClient
             {
                 MessageBox.Show("The case already exists.");
             }
+            txtCase.Clear();
         }
 
         private void btnOK_Click(object sender, EventArgs e)
